@@ -41,19 +41,19 @@ public class Service {
      * @return an instance of java.lang.String
      */
     @GET
-    @Path("/get_features/{id}")
+    @Path("/feature/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public FeaturesDb getFeatureById(@PathParam("id")int id){
         return featureDao.getFeatureById(id);
     }
     @GET
-    @Path("/get_features")
+    @Path("/features")
     @Produces(MediaType.APPLICATION_JSON)
     public List<FeaturesDb> getFeature(){
         return featureDao.getFeature();
     }
     @DELETE
-    @Path("/delete_features/{id}")
+    @Path("/feature/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteFeature(@PathParam("id")int id){
         if(!featureDao.deleteFeature(id))
@@ -61,33 +61,20 @@ public class Service {
          return "{\"error\": \"fail\"}";
         
     }
-    
     @POST
-    @Path("/add_features/{Renderingengine}/{Browser}/{Platforms}/{Engineversion}/{Cssgrade}")
+    @PUT
+    @Path("/feature")
     @Produces(MediaType.APPLICATION_JSON)
-    public String addFeature(@PathParam("Renderingengine")String Renderingengine,@PathParam("Browser")String Browser,@PathParam("Platforms")String Platforms,@PathParam("Engineversion")Double Engineversion,@PathParam("Cssgrade")String Cssgrade){
-        FeaturesDb f = new FeaturesDb();
-        f.setRenderingengine(Renderingengine);
-        f.setBrowser(Browser);
-        f.setPlatforms(Platforms);
-        f.setEngineversion(Engineversion);
-        f.setCssgrade(Cssgrade);
+    public String addFeature(FeaturesDb f){
         if(!featureDao.addFeature(f))
             return "{\"response\": \"success\"}";
          return "{\"error\": \"fail\"}";
     }
     @PUT
-    @Path("/update_features/{Id}/{Renderingengine}/{Browser}/{Platforms}/{Engineversion}/{Cssgrade}")
+    @Path("/feature/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateFeature(@PathParam("Id")int Id,@PathParam("Renderingengine")String Renderingengine,@PathParam("Browser")String Browser,@PathParam("Platforms")String Platforms,@PathParam("Engineversion")Double Engineversion,@PathParam("Cssgrade")String Cssgrade){
-        FeaturesDb f = new FeaturesDb();
-        f.setId(Id);
-        f.setRenderingengine(Renderingengine);
-        f.setBrowser(Browser);
-        f.setPlatforms(Platforms);
-        f.setEngineversion(Engineversion);
-        f.setCssgrade(Cssgrade);
-        if(!featureDao.addFeature(f))
+    public String editFeature(@PathParam("id")int id,FeaturesDb f){
+        if(!featureDao.editFeature(id,f))
             return "{\"response\": \"success\"}";
          return "{\"error\": \"fail\"}";
     }

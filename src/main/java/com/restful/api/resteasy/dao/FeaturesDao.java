@@ -85,6 +85,28 @@ public class FeaturesDao {
         }
         return Error;
     }
+     public boolean editFeature(int id,FeaturesDb feature) {
+        boolean Error = false;
+        Session session = null;
+        feature.setId(id);
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.saveOrUpdate(feature);
+            session.getTransaction().commit();
+        } 
+        catch (Exception ex) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            Error = true;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return Error;
+    }
      
     public boolean deleteFeature(int id) {
         boolean Error = false;
