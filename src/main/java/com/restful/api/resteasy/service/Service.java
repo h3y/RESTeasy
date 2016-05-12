@@ -8,16 +8,23 @@ package com.restful.api.resteasy.service;
 import com.restful.api.resteasy.dao.FeaturesDao;
 import com.restful.api.resteasy.model.FeaturesDb;
 import java.util.List;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import org.json.simple.JSONObject;
 
 /**
  * REST Web Service
@@ -25,7 +32,7 @@ import javax.ws.rs.core.MediaType;
  * @author slavik
  */
 @Path("api")
-public class Service {
+public class Service{
     @Context
     private UriInfo context;
     private FeaturesDao featureDao = new FeaturesDao();
@@ -46,12 +53,14 @@ public class Service {
     public FeaturesDb getFeatureById(@PathParam("id")int id){
         return featureDao.getFeatureById(id);
     }
+    
     @GET
     @Path("/features")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<FeaturesDb> getFeature(){
-        return featureDao.getFeature();
+    public JSONObject getFeature(@QueryParam("length")int length,@QueryParam("start")int start,@QueryParam("order[0][column]")int column,@QueryParam("order[0][dir]")String dir){
+         return featureDao.getFeature(length,start,column,dir);
     }
+    
     @DELETE
     @Path("/feature/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,7 +71,6 @@ public class Service {
         
     }
     @POST
-    @PUT
     @Path("/feature")
     @Produces(MediaType.APPLICATION_JSON)
     public String addFeature(FeaturesDb f){
@@ -70,6 +78,7 @@ public class Service {
             return "{\"response\": \"success\"}";
          return "{\"error\": \"fail\"}";
     }
+    
     @PUT
     @Path("/feature/{id}")
     @Produces(MediaType.APPLICATION_JSON)

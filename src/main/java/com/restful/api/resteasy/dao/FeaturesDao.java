@@ -8,8 +8,13 @@ package com.restful.api.resteasy.dao;
 import com.restful.api.resteasy.model.FeaturesDb;
 import com.restful.api.resteasy.util.HibernateUtil;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.UriInfo;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -41,15 +46,24 @@ public class FeaturesDao {
         return feature;
     }
     
-    public  List <FeaturesDb> getFeature() {
+    public JSONObject getFeature(int length,int start,int column,String dir){
 
-        List <FeaturesDb> feature = null;
+        List feature = null;
         Session session = null;
-
+        JSONObject obj = new JSONObject();
         try {
+            String [] s = {"id","renderingengine","renderingengine","browser","platforms","engineversion","cssgrade"};
             session = sessionFactory.openSession();
             session.beginTransaction();
-            feature = session.createQuery("from FeaturesDb").list();
+
+            String query = "from FeaturesDb";
+            if(dir!=null)
+                query += " order by "+s[column]+" "+dir;
+
+            feature = session.createQuery(query).setMaxResults(length).setFirstResult(start).list();
+            Query q  = session.createQuery("SELECT COUNT(*) FROM FeaturesDb");
+            obj.put("count", q.list()); 
+            obj.put("data", (List)feature);
             session.getTransaction().commit();
         } 
         catch (Exception ex) {
@@ -61,7 +75,7 @@ public class FeaturesDao {
                 session.close();
             }
         }
-        return feature;
+        return obj;
     }
     
      public boolean addFeature(FeaturesDb feature) {
@@ -114,7 +128,7 @@ public class FeaturesDao {
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
-            session.createQuery("delete Features  where id = :Id").setParameter("Id", id).executeUpdate();
+            session.createQuery("delete FeaturesDb  where id = :Id").setParameter("Id", id).executeUpdate();
             session.getTransaction().commit();
         } 
         catch (Exception ex) {
