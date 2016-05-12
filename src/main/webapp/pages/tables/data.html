@@ -462,6 +462,67 @@
     <!-- /.sidebar -->
   </aside>
 
+<!-- Bootstrap modal -->
+<div class="modal fade" id="modal_form" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                &nbsp<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Features</h3>
+            </div>
+            <div class="modal-body form">
+                <form action="#" id="form" class="form-horizontal">
+                    <input type="hidden" value="" name="id"/>
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Rendering Engine</label>
+                            <div class="col-md-9">
+                                <input name="renderingengine" placeholder="Rendering Engine" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Browser</label>
+                            <div class="col-md-9">
+                                <input name="browser" placeholder="Browser" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label col-md-3">Platform(s)</label>
+                            <div class="col-md-9">
+                                <input name="platforms" placeholder="Platform(s)" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label col-md-3">Engine Version</label>
+                            <div class="col-md-9">
+                                <input name="engineversion" placeholder="Engine Version" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label col-md-3">CSS grade</label>
+                            <div class="col-md-9">
+                                <input name="cssgrade" placeholder="CSS grade" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                       
+                       
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- End Bootstrap modal -->
+
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -486,6 +547,7 @@
               <h3 class="box-title">Data Table With Full Features</h3>
             </div>
             <!-- /.box-header -->
+            &nbsp&nbsp&nbsp<button id="add_features" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> Add Features</button>
             <div class="box-body">
               <table id="full-features" class="table table-bordered table-striped">
               </table>
@@ -709,8 +771,8 @@
 <script src="../../plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="../../bootstrap/js/bootstrap.min.js"></script>
-<!-- DataTables -->
-<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<!-- DataTables-->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script> 
 <script src="../../plugins/datatables/dataTables.bootstrap.min.js"></script>
 <!-- SlimScroll -->
 <script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
