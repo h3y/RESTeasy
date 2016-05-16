@@ -7,6 +7,7 @@ package com.restful.api.resteasy.service;
 
 import com.restful.api.resteasy.dao.FeaturesDao;
 import com.restful.api.resteasy.model.FeaturesDb;
+import com.restful.api.resteasy.model.requestParam;
 import java.util.List;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.json.simple.JSONObject;
 
 /**
@@ -57,8 +59,15 @@ public class Service{
     @GET
     @Path("/features")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getFeature(@QueryParam("length")int length,@QueryParam("start")int start,@QueryParam("order[0][column]")int column,@QueryParam("order[0][dir]")String dir){
-         return featureDao.getFeature(length,start,column,dir);
+    public Response getFeature(){       
+              return featureDao.getFeature(context);
+    }
+    
+    @GET
+    @Path("/featuresgroup")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List getFeatureGroupBy(){
+         return featureDao.getFeatureGroupBy();
     }
     
     @DELETE

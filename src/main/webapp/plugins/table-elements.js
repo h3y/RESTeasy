@@ -10,7 +10,7 @@ $(document).ready(function(){
 		 "ordering": true,
 		 "paging": true,
 	     "lengthChange": true,
-	     "searching": false,
+	     "searching": true,
 	     "info": true,
 	     "autoWidth": false,
 		"ajax": $.fn.dataTable.pipeline({
@@ -218,34 +218,37 @@ $.fn.dataTable.pipeline = function ( opts ) {
 				// As an object, the data given extends the default
 				$.extend( request, conf.data );
 			}
-
 			settings.jqXHR = $.ajax( {
 				"type":     conf.method,
 				"url":      conf.url,
-				"data":     request,
+				"data":     requestMapper(request),
 				"dataType": "json",
 				"cache":    false,
-				"success":  function ( json ) {
-					json['recordsTotal'] = json.count[0];
-					json['recordsFiltered'] = json.count[0];
-					
+				"success":  function ( json,textStatus, request) {
 					cacheLastJson = $.extend(true, {}, json);
 					if ( cacheLower != drawStart ) {
-						json.data.splice( 0, drawStart-cacheLower );
+						json.splice( 0, drawStart-cacheLower );
 					}
-					json.data.splice( requestLength, json.data.length );
+					json.splice( requestLength, json.length );
 					
-					drawCallback( json );
+					drawCallback({data: json,
+						recordsTotal: request.getResponseHeader('recordsTotal'),
+						recordsFiltered: request.getResponseHeader('recordsFiltered'),}
+					);
+
 				}
 			} );
 		}
 		else {
 			json = $.extend( true, {}, cacheLastJson );
-			json.draw = request.draw; // Update the echo for each response
-			json.data.splice( 0, requestStart-cacheLower );
-			json.data.splice( requestLength, json.data.length );
-
-			drawCallback(json);
+; // Update the echo for each response
+			json.splice( 0, requestStart-cacheLower );
+			json.splice( requestLength, json.length );
+			drawCallback({draw: request.draw,
+						  data: json,
+						  recordsTotal: request.getResponseHeader('recordsTotal'),
+						  recordsFiltered: request.getResponseHeader('recordsFiltered'),
+			});
 		}
 	}
 };
