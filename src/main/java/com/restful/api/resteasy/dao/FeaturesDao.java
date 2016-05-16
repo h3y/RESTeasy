@@ -55,7 +55,6 @@ public class FeaturesDao {
                                     Integer.parseInt(context.getQueryParameters().getFirst("start")),
                                     context.getQueryParameters().getFirst("column"),
                                     context.getQueryParameters().getFirst("dir"),
-                                    context.getQueryParameters().getFirst("regex"),
                                     context.getQueryParameters().getFirst("value"));
          
         List feature = null;

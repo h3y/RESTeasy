@@ -166,14 +166,13 @@ $.fn.dataTable.pipeline = function ( opts ) {
 					});
 				}
 			} );
-	
-};
-
-// Register an API method that will empty the pipelined data, forcing an Ajax
-// fetch on the next draw (i.e. `table.clearPipeline().draw()`)
-$.fn.dataTable.Api.register( 'clearPipeline()', function () {
-	return this.iterator( 'table', function ( settings ) {
-		settings.clearCache = true;
-	} );
-} );
+	};
 }
+
+	// Register an API method that will empty the pipelined data, forcing an Ajax
+	// fetch on the next draw (i.e. `table.clearPipeline().draw()`)
+	$.fn.dataTable.Api.register( 'clearPipeline()', function () {
+		return this.iterator( 'table', function ( settings ) {
+			settings.clearCache = true;
+		} );
+	});
