@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 05.05.2016 15:17:48 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="com.restful.api.resteasy.model.FeaturesDb" table="features_db" catalog="RESTWeb" optimistic-lock="version">
+    <class name="com.restful.api.resteasy.model.Feature" table="features_db" catalog="RESTWeb" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="Id" />
             <generator class="identity" />

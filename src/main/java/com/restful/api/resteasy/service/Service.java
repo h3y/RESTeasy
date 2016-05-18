@@ -6,7 +6,7 @@
 package com.restful.api.resteasy.service;
 
 import com.restful.api.resteasy.dao.FeaturesDao;
-import com.restful.api.resteasy.model.FeaturesDb;
+import com.restful.api.resteasy.model.Feature;
 import com.restful.api.resteasy.model.requestParam;
 import java.util.List;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +35,9 @@ import org.json.simple.JSONObject;
  */
 @Path("api")
 public class Service{
+    private final  String HAS_ERROR = "{\"response\": \"error\"}";
+    private final  String HAS_SUCCESS = "{\"response\": \"success\"}";
+   
     @Context
     private UriInfo context;
     private FeaturesDao featureDao = new FeaturesDao();
@@ -43,6 +46,7 @@ public class Service{
      * Creates a new instance of Service
      */
     public Service() {
+       
     }
 
     /**
@@ -52,48 +56,54 @@ public class Service{
     @GET
     @Path("/feature/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public FeaturesDb getFeatureById(@PathParam("id")int id){
-        return featureDao.getFeatureById(id);
+    public Response getFeatureById(@PathParam("id")int id){
+        Feature f = featureDao.getFeatureById(id); 
+        if(f == null)
+            return Response.status(404).entity(HAS_ERROR).build();
+        else
+            return Response.status(200).entity(f).build();
     }
     
     @GET
     @Path("/features")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFeature(){       
-              return featureDao.getFeature(context);
-    }
+        JSONObject obj = featureDao.getFeature(context);
+        if(obj.get("data")==null)
+            return Response.status(404).build();
+        else
+            return Response.status(200).entity(obj.get("data")).header("recordsFiltered", obj.get("recordsFiltered")).header("recordsTotal", obj.get("recordsTotal")).build();  
+     }
     
     @GET
     @Path("/featuresgroup")
     @Produces(MediaType.APPLICATION_JSON)
-    public List getFeatureGroupBy(){
-         return featureDao.getFeatureGroupBy();
+    public Response getFeatureGroupBy(){
+        List f = featureDao.getFeatureGroupBy();
+        return Response.status(200).entity(f).build();
     }
     
     @DELETE
     @Path("/feature/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteFeature(@PathParam("id")int id){
-        if(!featureDao.deleteFeature(id))
-            return "{\"response\": \"success\"}";
-         return "{\"error\": \"fail\"}";
-        
+    public Response deleteFeature(@PathParam("id")int id){
+          return !featureDao.deleteFeature(id)? Response.status(200).entity(HAS_SUCCESS).build():
+                 Response.status(404).entity(HAS_ERROR).build();
     }
+    
     @POST
     @Path("/feature")
     @Produces(MediaType.APPLICATION_JSON)
-    public String addFeature(FeaturesDb f){
-        if(!featureDao.addFeature(f))
-            return "{\"response\": \"success\"}";
-         return "{\"error\": \"fail\"}";
+    public Response addFeature(Feature f){
+         return !featureDao.addFeature(f)? Response.status(200).entity(HAS_SUCCESS).build():
+                 Response.status(404).entity(HAS_ERROR).build();
     }
     
     @PUT
     @Path("/feature/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String editFeature(@PathParam("id")int id,FeaturesDb f){
-        if(!featureDao.editFeature(id,f))
-            return "{\"response\": \"success\"}";
-         return "{\"error\": \"fail\"}";
+    public Response editFeature(@PathParam("id")int id,Feature f){
+        return !featureDao.editFeature(id,f)? Response.status(200).entity(HAS_SUCCESS).build():
+                Response.status(404).entity(HAS_ERROR).build();
     }
 }
