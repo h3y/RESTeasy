@@ -79,7 +79,7 @@ $(document).ready(function(){
 		}
 
 		if($('[name="engineversion"]').val()==""){
-    			$('[name="engineversion"]').val(0);
+    			$('[name="engineversion"]').val("-");
     	}
 
 		request_data={

@@ -17,8 +17,8 @@
         <property name="platforms" type="string">
             <column name="Platforms" length="30" not-null="true" />
         </property>
-        <property name="engineversion" type="java.lang.Double">
-            <column name="Engineversion" precision="22" scale="0" />
+        <property name="engineversion" type="string">
+            <column name="Engineversion" length="30" not-null="false" />
         </property>
         <property name="cssgrade" type="string">
             <column name="CSSgrade" length="6" not-null="true" />

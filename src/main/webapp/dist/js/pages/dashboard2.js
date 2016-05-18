@@ -3,12 +3,6 @@ $(function () {
   'use strict';
 
   var color = ["#f56954","#00a65a","#f39c12","#00c0ef","#3c8dbc","#d2d6de","#FFCC00","#6A5ACD","#FFDB8B","#414A4C"];
-  /*var randomColorFactor = function() {
-    return Math.round(Math.random() * 255);
-  };
-  var randomColor = function() {
-    return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (1) + ')';
-  };*/
   //-------------
   //- PIE CHART -
   //-------------

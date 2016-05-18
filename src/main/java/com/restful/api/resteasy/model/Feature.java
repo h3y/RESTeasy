@@ -13,7 +13,7 @@ public class Feature  implements java.io.Serializable {
      private String renderingengine;
      private String browser;
      private String platforms;
-     private Double engineversion;
+     private String engineversion;
      private String cssgrade;
 
     public Feature() {
@@ -25,7 +25,7 @@ public class Feature  implements java.io.Serializable {
         this.platforms = platforms;
         this.cssgrade = cssgrade;
     }
-    public Feature(String renderingengine, String browser, String platforms, Double engineversion, String cssgrade) {
+    public Feature(String renderingengine, String browser, String platforms, String engineversion, String cssgrade) {
        this.renderingengine = renderingengine;
        this.browser = browser;
        this.platforms = platforms;
@@ -61,11 +61,11 @@ public class Feature  implements java.io.Serializable {
     public void setPlatforms(String platforms) {
         this.platforms = platforms;
     }
-    public Double getEngineversion() {
+    public String getEngineversion() {
         return this.engineversion;
     }
     
-    public void setEngineversion(Double engineversion) {
+    public void setEngineversion(String engineversion) {
         this.engineversion = engineversion;
     }
     public String getCssgrade() {
