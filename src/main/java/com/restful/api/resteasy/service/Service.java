@@ -9,16 +9,11 @@ import com.restful.api.resteasy.dao.FeaturesDao;
 import com.restful.api.resteasy.model.Feature;
 import com.restful.api.resteasy.model.requestParam;
 import java.util.List;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
@@ -67,8 +62,9 @@ public class Service{
     @GET
     @Path("/features")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFeature(){       
-        JSONObject obj = featureDao.getFeature(context);
+      public Response getFeature(@QueryParam("length")int length,@QueryParam("start")int start,@QueryParam("column")String column,@QueryParam("dir")String dir,@QueryParam("value")String value){       
+        requestParam r = new requestParam(length,start,column,dir,value);
+        JSONObject obj = featureDao.getFeature(r);
         if(obj.get("data")==null)
             return Response.status(404).build();
         else
