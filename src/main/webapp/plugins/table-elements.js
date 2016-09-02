@@ -13,50 +13,57 @@ $(document).ready(function(){
 	     "searching": true,
 	     "info": true,
 	     "autoWidth": false,
-		"ajax": $.fn.dataTable.pipeline({
-			url: '../../restful/api/features',
-		}),
+		"ajax": getContent(),
 		"columns": [
 						{"data": "id", "title":'ID'},
-						{"data": "renderingengine", "title":"Rendering Engine"},
+						{"data": "rendering_engine", "title":"Rendering Engine"},
 						{"data": "browser", "title":"Browser"},
-						{"data": "platforms", "title":"Platform(s)"},
-						{"data": "engineversion", "title":"Engine version"},
-						{"data": "cssgrade", "title":"	CSS grade"},
+						{"data": "platform", "title":"Platform(s)"},
+						{"data": "engine_version", "title":"Engine version"},
+						{"data": "css_grade", "title":"	CSS grade"},
 						{"data": null, "defaultContent":"<a id='edit-feature' class='btn btn-sm btn-primary'> <i class='glyphicon glyphicon-pencil'> </i> Edit</a>&nbsp&nbsp&nbsp<a id='delete-feature'class='btn btn-sm btn-danger'> <i class='glyphicon glyphicon-trash'></i> Delete</a> ","title":"Action"}
 		  			],
 
 		
-	} );	
+	});	
+
+
+	function checkInput(name){
+		if($('[name="'+name+'"]').val().trim() == ""){
+			$('[name="'+name+'"]').parent().children()[1].textContent = "Invalid value";
+			return false;
+		}
+		$('[name="'+name+'"]').parent().children()[1].textContent = "";
+		return true;
+	}
 
 	var save_method;
-	var data;
+
 	//
 	//Edit features
 	//
     $('#full-features tbody').on( 'click', '#edit-feature', function () {
-          	data = table.row( $(this).parents('tr') ).data();
-         	$('[name="id"]').val(data["id"]);
-            $('[name="renderingengine"]').val(data["renderingengine"]);
-            $('[name="browser"]').val(data["browser"]);
-            $('[name="platforms"]').val(data["platforms"]);
-            $('[name="engineversion"]').val(data["engineversion"]);
-            $('[name="cssgrade"]').val(data["cssgrade"]);
-       	 	$('#modal_form').modal('show');
-       	 	$('.modal-title').text('Edit Features');
-       	 	save_method = 'update';
-
+      	var data = table.row( $(this).parents('tr') ).data();
+     	$('[name="id"]').val(data["id"]);
+        $('[name="rendering_engine"]').val(data["rendering_engine"]);
+        $('[name="browser"]').val(data["browser"]);
+        $('[name="platform"]').val(data["platform"]);
+        $('[name="engine_version"]').val(data["engine_version"]);
+        $('[name="css_grade"]').val(data["css_grade"]);
+   	 	$('#modal_form').modal('show');
+   	 	$('.modal-title').text('Edit Features');
+   	 	save_method = 'update';
     });
     //
     //Add features
     //
 	$('#add_features').click(function(){
 		$('[name="id"]').val("");
-        $('[name="renderingengine"]').val("");
+        $('[name="rendering_engine"]').val("");
         $('[name="browser"]').val("");
-        $('[name="platforms"]').val("");
-        $('[name="engineversion"]').val("");
-        $('[name="cssgrade"]').val("");
+        $('[name="platform"]').val("");
+        $('[name="engine_version"]').val("");
+        $('[name="css_grade"]').val("");
 		$('#modal_form').modal('show');
 		$('.modal-title').text('Add Features');
 		save_method = 'add';
@@ -77,42 +84,31 @@ $(document).ready(function(){
     		url = "../../restful/api/feature/"+$('[name="id"]').val();
 			dataType = "PUT";
 		}
-
-		if($('[name="engineversion"]').val()==""){
-    			$('[name="engineversion"]').val("-");
-    	}
-
 		request_data={
-			    "renderingengine": $('[name="renderingengine"]').val(),
+			    "rendering_engine": $('[name="rendering_engine"]').val(),
 				"browser": $('[name="browser"]').val(),
-				"platforms": $('[name="platforms"]').val(),
-				"engineversion": $('[name="engineversion"]').val(),
-				"cssgrade": $('[name="cssgrade"]').val()
+				"platform": $('[name="platform"]').val(),
+				"engine_version": $('[name="engine_version"]').val(),
+				"css_grade": $('[name="css_grade"]').val()
+		}		
+    	if(checkInput("rendering_engine")&checkInput("browser")&checkInput("platform")&checkInput("engine_version")&checkInput("css_grade")){
+			$.ajax({
+		        url : url,
+		        contentType: "application/json",
+		        type: dataType,
+		        data: JSON.stringify(request_data),
+		        success: function()
+		        {
+		            $('#modal_form').modal('hide');
+		          	table.draw();
+
+		        },
+		        error: function (jqXHR, textStatus, errorThrown)
+		        {
+		            alert('Error get data from ajax');
+		        }
+	   		});
 		}
-		request_data = JSON.stringify(request_data);
-		$('#btnSave').text('saving...'); //change button text
-    	$('#btnSave').attr('disabled',true); //set button disable
-		$.ajax({
-	        url : url,
-	        contentType: "application/json",
-	        type: dataType,
-	        data: request_data,
-	        success: function()
-	        {
-	    		$('#btnSave').text('save'); //change button text
-	        	$('#btnSave').attr('disabled',false); //set button enable
-	            $('#modal_form').modal('hide');
-	          	table.clearPipeline().draw();
-
-	        },
-	        error: function (jqXHR, textStatus, errorThrown)
-	        {
-	            alert('Error get data from ajax');
-	            $('#btnSave').text('save'); //change button text
-	            $('#btnSave').attr('disabled',false); //set button enable
-	        }
-   		});
-
     });
 
  //delete features
@@ -126,7 +122,7 @@ $(document).ready(function(){
 			    type: "DELETE",
 			    success: function()
 			    {
-		            table.clearPipeline().draw();
+		            table.draw();
 			    },
 		        error: function (jqXHR, textStatus, errorThrown)
 		        {
@@ -137,42 +133,18 @@ $(document).ready(function(){
     });
 
 });
-//
-// Pipelining function for DataTables. To be used to the `ajax` option of DataTables
-//
-$.fn.dataTable.pipeline = function ( opts ) {
-	// Configuration options
-	var conf = $.extend( {
-		url: '',      // script url
-		data: null,   // function or object with parameters to send to the server
-		              // matching how `ajax.data` works in DataTables
-		method: 'GET' // Ajax HTTP method
-	}, opts );
-
-
+//get content
+function getContent() {
 	return function ( request, drawCallback, settings ) {
 			settings.jqXHR = $.ajax( {
-				"type":     conf.method,
-				"url":      conf.url,
+				"type":     'GET',
+				"url":      '../../restful/api/features',
 				"data":     requestMapper(request),
 				"dataType": "json",
 				"cache":    false,
 				"success":  function ( json,textStatus, requestj) {
-					recordsTotal = requestj.getResponseHeader('recordsTotal');
-					recordsFiltered = requestj.getResponseHeader('recordsFiltered');
-					drawCallback({data: json,
-						recordsTotal: recordsTotal,
-						recordsFiltered: recordsFiltered,
-					});
+					drawCallback(json);
 				}
 			} );
 	};
 }
-
-	// Register an API method that will empty the pipelined data, forcing an Ajax
-	// fetch on the next draw (i.e. `table.clearPipeline().draw()`)
-	$.fn.dataTable.Api.register( 'clearPipeline()', function () {
-		return this.iterator( 'table', function ( settings ) {
-			settings.clearCache = true;
-		} );
-	});
